@@ -104,6 +104,7 @@ Sub BindShortcuts()
     Application.OnKey "^+a", "FormatSheetArial"   ' Ctrl+Shift+A
     Application.OnKey "^+q", "ToggleYellow"   ' ctrl+Shift+Q
     Application.OnKey "^+i", "TogglePurpleFont"   ' Ctrl+Shift+I
+    Application.OnKey "^+o", "ToggleGreenFont"   ' Ctrl+Shift+O
 End Sub
 
 Sub UnbindShortcuts()
@@ -116,5 +117,6 @@ Sub UnbindShortcuts()
     Application.OnKey "^+i"
     Application.OnKey "^%{RIGHT}"
     Application.OnKey "^%{LEFT}"
+    Application.OnKey "^+o"
 End Sub
 
