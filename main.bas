@@ -190,7 +190,6 @@ Sub BindShortcuts()
     Application.OnKey "^+q", "ToggleYellow"   ' ctrl+Shift+Q
     Application.OnKey "^+i", "TogglePurpleFont"   ' Ctrl+Shift+I
     Application.OnKey "^+o", "ToggleGreenFont"   ' Ctrl+Shift+O
-    Application.OnKey "^+t", "IncreaseDecimal"   ' Ctrl+Shift+I
     Application.OnKey "^%{RIGHT}", "IncreaseDecimal"
     Application.OnKey "^%{LEFT}", "DecreaseDecimal"
     Application.OnKey "^+f", "SelectVisibleBlanks"
