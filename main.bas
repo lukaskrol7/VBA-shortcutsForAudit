@@ -108,25 +108,47 @@ Sub DecreaseDecimal()
     Next cell
 End Sub
 
-Private Function GetAdjustedFormat(fmt As String, delta As Integer) As String
-    Dim decimals As Integer
+Function GetAdjustedFormat(ByVal fmt As String, ByVal delta As Long) As String
+    Dim baseFmt As String
+    Dim decimals As Long
+    Dim posDot As Long
+    Dim hasPercent As Boolean
     
-    ' policz kropki i zera po przecinku
-    If InStr(fmt, ".") > 0 Then
-        decimals = Len(Split(fmt, ".")(1))
+    hasPercent = InStr(fmt, "%") > 0
+    
+    'Usuwamy %
+    If hasPercent Then
+        baseFmt = Replace(fmt, "%", "")
+    Else
+        baseFmt = fmt
+    End If
+    
+    posDot = InStr(baseFmt, ".")
+    
+    If posDot > 0 Then
+        decimals = Len(baseFmt) - posDot
     Else
         decimals = 0
     End If
     
-    decimals = decimals + delta
-    If decimals < 0 Then decimals = 0
+    decimals = Application.Max(0, decimals + delta)
     
-    If decimals = 0 Then
-        GetAdjustedFormat = "0"
+    If decimals > 0 Then
+        baseFmt = Left(baseFmt, IIf(posDot > 0, posDot - 1, Len(baseFmt))) _
+                  & "." & String(decimals, "0")
     Else
-        GetAdjustedFormat = "0." & String(decimals, "0")
+        baseFmt = Left(baseFmt, IIf(posDot > 0, posDot - 1, Len(baseFmt)))
+    End If
+    
+    ' przywracamy %
+    If hasPercent Then
+        GetAdjustedFormat = baseFmt & "%"
+    Else
+        GetAdjustedFormat = baseFmt
     End If
 End Function
+
+
 Sub SelectVisibleBlanks()
     Dim rng As Range
     Dim blanks As Range
