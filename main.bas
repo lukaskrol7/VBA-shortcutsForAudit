@@ -1,27 +1,30 @@
 Sub TogglePurpleFont()
-    Dim cell As Range
     Dim rng As Range
     Dim purpleColor As Long
 
     purpleColor = RGB(79, 45, 127)
 
+    ' current selection
+    On Error Resume Next
     Set rng = Selection
+    On Error GoTo 0
+    If rng Is Nothing Then Exit Sub
 
-    ' loop through each cell and toggle purple + bold
-    For Each cell In rng
-        With cell.Font
-            ' toggle off if already purple
-            If .Color = purpleColor = True Then
-                .Color = vbBlack      ' reset to black
-                .Bold = False         ' turn off bold
-            Else
-                ' toggle on
-                .Color = purpleColor
-                .Bold = True
-            End If
-        End With
-    Next cell
+    ' toggle based on current state of selection
+    ' (Excel checks first cell of the range)
+    With rng.Font
+        ' toggle off if already purple + bold
+        If .Color = purpleColor And .Bold = True Then
+            .Color = vbBlack      ' reset to black
+            .Bold = False         ' turn off bold
+        Else
+            ' toggle on
+            .Color = purpleColor
+            .Bold = True
+        End If
+    End With
 End Sub
+
 
 Sub ToggleGreenFont()
     Dim cell As Range
@@ -47,31 +50,23 @@ Sub ToggleGreenFont()
         End With
     Next cell
 End Sub
-Sub ToggleYellow()
-    Dim cell As Range
+Public Sub ToggleYellow()
     Dim rng As Range
-    Dim answer As VbMsgBoxResult
 
-    ' current selection
+    On Error Resume Next
     Set rng = Selection
+    On Error GoTo 0
+    If rng Is Nothing Then Exit Sub
 
-    ' if selection is larger than 1000 cells — show warning with option to cancel, cuz u might accidently press it
-    If rng.Count > 1000 Then
-        answer = MsgBox("Zaznaczono " & rng.Count & " komórek." & vbCrLf & _
-                        "Czy na pewno chcesz kontynuować?", _
-                        vbExclamation + vbYesNo, "Uwaga: duży zakres")
-
-        If answer = vbNo Then Exit Sub
+    ' decyzja na podstawie aktualnego stanu zaznaczenia
+    If rng.Interior.Color = vbYellow Then
+        rng.Interior.ColorIndex = xlNone
+        rng.Font.Color = vbNone
+    Else
+        rng.Interior.Color = vbYellow
+        rng.Font.Color = vbRed
+        rng.Font.Bold = True
     End If
-
-    ' Main loop
-    For Each cell In rng
-        If cell.Interior.Color = vbYellow Then
-            cell.Interior.ColorIndex = xlNone    ' if it already have the yellow, delete it
-        Else
-            cell.Interior.Color = vbYellow       ' else: make it yellow
-        End If
-    Next cell
 End Sub
 
 Sub FormatSheetArial()
