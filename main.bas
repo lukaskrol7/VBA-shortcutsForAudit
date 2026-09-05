@@ -1,28 +1,36 @@
-Sub TogglePurpleFont()
+Sub TogglePurple()
     Dim rng As Range
+    Dim c As Range
+    Dim state As Long
     Dim purpleColor As Long
-
+    
     purpleColor = RGB(79, 45, 127)
-
-    ' current selection
-    On Error Resume Next
+    
     Set rng = Selection
-    On Error GoTo 0
-    If rng Is Nothing Then Exit Sub
-
-    ' toggle based on current state of selection
-    ' (Excel checks first cell of the range)
-    With rng.Font
-        ' toggle off if already purple + bold
-        If .Color = purpleColor And .Bold = True Then
-            .Color = vbBlack      ' reset to black
-            .Bold = False         ' turn off bold
-        Else
-            ' toggle on
-            .Color = purpleColor
-            .Bold = True
-        End If
-    End With
+    Set c = rng.Cells(1, 1)
+    
+    If c.Interior.ColorIndex = xlNone And c.Font.Color = purpleColor Then
+        state = 1
+    ElseIf c.Interior.Color = purpleColor And c.Font.Color = vbWhite Then
+        state = 2
+    Else
+        state = 0
+    End If
+    
+    Select Case state
+        Case 0  ' domyslny - fioletowa czcionka
+            rng.Interior.ColorIndex = xlNone
+            rng.Font.Color = purpleColor
+            rng.Font.Bold = True
+        Case 1  ' biala czcionka na fioletowym
+            rng.Interior.Color = purpleColor
+            rng.Font.Color = vbWhite
+            rng.Font.Bold = True
+        Case 2  ' powrót do domyślnego
+            rng.Interior.ColorIndex = xlNone
+            rng.Font.ColorIndex = xlAutomatic
+            rng.Font.Bold = False
+    End Select
 End Sub
 Sub ToggleGreen()
     Dim rng As Range
@@ -45,7 +53,7 @@ Sub ToggleGreen()
     End If
     
     Select Case state
-        Case 0  ' domyslny -> zielona czcionka
+        Case 0  ' domyslny - zielona czcionka
             rng.Interior.ColorIndex = xlNone
             rng.Font.Color = greenColor
             rng.Font.Bold = True
@@ -77,7 +85,7 @@ Sub ToggleYellowRed()
     End If
     
     Select Case state
-        Case 0  ' domyslny -> czerwony napis na żóltym
+        Case 0  ' domyslny - czerwony napis na żóltym
             rng.Interior.Color = vbYellow
             rng.Font.Color = vbRed
             rng.Font.Bold = True
@@ -290,7 +298,7 @@ Sub BindShortcuts()
     
     Application.OnKey "^+a", "NormalizeView" ' Ctrl+Shift+A
     Application.OnKey "^+q", "ToggleYellowRed" ' Ctrl+Shift+Q
-    Application.OnKey "^+i", "TogglePurpleFont" ' Ctrl+Shift+I
+    Application.OnKey "^+i", "TogglePurple" ' Ctrl+Shift+I
     Application.OnKey "^+o", "ToggleGreen" ' Ctrl+Shift+O
     
     Application.OnKey "^%{RIGHT}", "IncreaseDecimal" ' Ctrl+Alt+Right
