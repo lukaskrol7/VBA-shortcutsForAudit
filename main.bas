@@ -48,23 +48,37 @@ Sub ToggleGreenFont()
         End With
     Next cell
 End Sub
-Sub ToggleYellow()
+Sub ToggleYellowRed()
     Dim rng As Range
-
-    On Error Resume Next
+    Dim c As Range
+    Dim state As Long
+    
     Set rng = Selection
-    On Error GoTo 0
-    If rng Is Nothing Then Exit Sub
-
-    ' decyzja na podstawie aktualnego stanu zaznaczenia
-    If rng.Interior.Color = vbYellow Then
-        rng.Interior.ColorIndex = xlNone
-        rng.Font.Color = vbNone
+    Set c = rng.Cells(1, 1)
+    
+    ' odczyt stanu z pierwszej komórki zaznaczenia -> to co będzie w pierwszym będzie traktowane jakby było w całym
+    If c.Interior.Color = vbYellow And c.Font.Color = vbRed Then
+        state = 1
+    ElseIf c.Interior.Color = vbRed And c.Font.Color = vbYellow Then
+        state = 2
     Else
-        rng.Interior.Color = vbYellow
-        rng.Font.Color = vbRed
-        rng.Font.Bold = True
+        state = 0
     End If
+    
+    Select Case state
+        Case 0  ' domyslny -> czerwony napis na żóltym
+            rng.Interior.Color = vbYellow
+            rng.Font.Color = vbRed
+            rng.Font.Bold = True
+        Case 1  ' zolty napis na czerwonym
+            rng.Interior.Color = vbRed
+            rng.Font.Color = vbYellow
+            rng.Font.Bold = True
+        Case 2  ' powrót do domyślnego
+            rng.Interior.ColorIndex = xlNone
+            rng.Font.ColorIndex = xlAutomatic
+            rng.Font.Bold = False
+    End Select
 End Sub
 Sub NormalizeView()
     
@@ -207,7 +221,7 @@ Sub BindShortcuts()
     Application.OnKey "%{UP}", "AlignCenter" ' Alt+Up
     
     Application.OnKey "^+a", "NormalizeView" ' Ctrl+Shift+A
-    Application.OnKey "^+q", "ToggleYellow" ' Ctrl+Shift+Q
+    Application.OnKey "^+q", "ToggleYellowRed" ' Ctrl+Shift+Q
     Application.OnKey "^+i", "TogglePurpleFont" ' Ctrl+Shift+I
     Application.OnKey "^+o", "ToggleGreenFont" ' Ctrl+Shift+O
     
