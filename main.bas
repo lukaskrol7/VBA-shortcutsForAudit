@@ -267,6 +267,20 @@ Sub FindSameColors()
     End If
 End Sub
 
+Sub ToggleDateFormat()
+    Dim rng As Range
+    Dim c As Range
+    
+    Set rng = Selection
+    Set c = rng.Cells(1, 1)
+    
+    If c.NumberFormat = "dd.mm.yyyy" Then
+        rng.NumberFormat = "General"
+    Else
+        rng.NumberFormat = "dd.mm.yyyy"
+    End If
+End Sub
+
 
 Sub BindShortcuts()
 
@@ -285,6 +299,9 @@ Sub BindShortcuts()
     Application.OnKey "^+f", "SelectVisibleBlanks" ' Ctrl+Shift+F
     Application.OnKey "^+c", "ToggleCenterAcrossSelection" ' Ctrl+Shift+C
     Application.OnKey "^+d", "FindSameColors" ' Ctrl+Shift+D
+    
+    Application.OnKey "^+3", "ToggleDateFormat" ' Ctrl+Shift+3
+    
 
 End Sub
 
@@ -306,6 +323,8 @@ Sub UnbindShortcuts()
     Application.OnKey "^+f"
     Application.OnKey "^+c"
     Application.OnKey "^+d"
+    
+    Application.OnKey "^+3"
 
 End Sub
 
