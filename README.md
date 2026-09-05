@@ -14,5 +14,6 @@ Sub Workbook_Open()
 End Sub
 ```
 ## Warto wiedzieć
-Niektóre bindy nadpisują te istniejące w excelu (moim zdaniem rzadko używane)
+Niektóre bindy nadpisują te istniejące w excelu (moim zdaniem rzadko używane).
+
 Niektórych funkcji excela nie opłaca się bindować, z uwagi na to że występują skróty "altowe", zachowując przy tym opcje zapisu
