@@ -1,4 +1,15 @@
 # VBA-shortcutsForAudit
-macros that I use as an assistant in audit to speed up my work
 
-the only thing u need to do is to add this script to your PERSONAL.XLSB file and run function BindShortcuts()
+Makra globalne powinny być przechowywane w pliku `PERSONAL.XLSB`
+
+Którego ściezka powinna wyglądać:
+```
+C:\Users\<nazwa>\AppData\Roaming\Microsoft\Excel\XLSTART\PERSONAL.XLSB
+```
+W pliku `PERSONAL.XLSB`, w module `ThisWorkbook` należy mieć inicjacje funkcji inicjującą wszystkie bindy
+
+```
+Sub Workbook_Open()
+    BindShortcuts
+End Sub
+```
