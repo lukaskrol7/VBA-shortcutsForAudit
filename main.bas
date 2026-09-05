@@ -24,29 +24,40 @@ Sub TogglePurpleFont()
         End If
     End With
 End Sub
-Sub ToggleGreenFont()
-    Dim cell As Range
+Sub ToggleGreen()
     Dim rng As Range
+    Dim c As Range
+    Dim state As Long
     Dim greenColor As Long
-
+    
     greenColor = RGB(0, 176, 80)   ' klasyczny Excelowy zielony
-
+    
     Set rng = Selection
-
-    ' loop through each cell and toggle green + bold
-    For Each cell In rng
-        With cell.Font
-            ' toggle off if already green + bold
-            If .Color = greenColor = True Then
-                .Color = vbBlack      ' reset to balck
-                .Bold = False         ' turn off bold
-            Else
-                ' toggle on
-                .Color = greenColor
-                .Bold = True
-            End If
-        End With
-    Next cell
+    Set c = rng.Cells(1, 1)
+    
+    ' odczyt stanu z pierwszej komórki zaznaczenia
+    If c.Interior.ColorIndex = xlNone And c.Font.Color = greenColor Then
+        state = 1
+    ElseIf c.Interior.Color = greenColor And c.Font.Color = vbWhite Then
+        state = 2
+    Else
+        state = 0
+    End If
+    
+    Select Case state
+        Case 0  ' domyslny -> zielona czcionka
+            rng.Interior.ColorIndex = xlNone
+            rng.Font.Color = greenColor
+            rng.Font.Bold = True
+        Case 1  ' biala czcionka na zielonym
+            rng.Interior.Color = greenColor
+            rng.Font.Color = vbWhite
+            rng.Font.Bold = True
+        Case 2  ' powrót do domyślnego
+            rng.Interior.ColorIndex = xlNone
+            rng.Font.ColorIndex = xlAutomatic
+            rng.Font.Bold = False
+    End Select
 End Sub
 Sub ToggleYellowRed()
     Dim rng As Range
@@ -186,6 +197,8 @@ Sub SelectVisibleBlanks()
     blanks.SpecialCells(xlCellTypeVisible).Select
 End Sub
 Sub ToggleCenterAcrossSelection()
+'Funkcja CenterAcrossSelection jako alternatywa do mergowania.
+'Popularniejsza opcja w IB
     Dim rng As Range
     Dim c As Range
     Dim allCenter As Boolean
@@ -214,6 +227,47 @@ Sub ToggleCenterAcrossSelection()
     End If
 End Sub
 
+Sub FindSameColors()
+'pomoże do znalezienia didaskaliów/komentarzy które są w specyficznym kolorze
+'do zastanowienia, czy muszą to być tło AND czionka czy tylko jedno OR nie ma sensu
+    Dim ws As Worksheet
+    Dim c As Range
+    Dim target As Range
+    
+    Dim firstHit As Range
+    Dim sKey As String
+    Dim go As Boolean
+
+    Set target = ActiveCell
+    sKey = target.Font.Color & "|" & target.Interior.Color 'do zastanowienia
+
+    For Each ws In ActiveWorkbook.Worksheets
+        If ws.Visible = xlSheetVisible Then 'skip ukryte arkusze
+            For Each c In ws.UsedRange
+                If c.Address(, , , True) = target.Address(, , , True) Then  'check, czy jest na komórce początkowej ;
+                                                                            'bo pętla matka przechodzi przez komórki od A1, więc żeby się nie cofać
+                    go = True
+                ElseIf Not c.EntireRow.Hidden And Not c.EntireColumn.Hidden Then 'do zastanowienia czy to co ukryte też wykrywać, ale raczej nie
+                    If c.Font.Color & "|" & c.Interior.Color = sKey Then
+                        If go Then
+                            ws.Activate
+                            c.Select
+                            Exit Sub
+                        End If
+                        If firstHit Is Nothing Then Set firstHit = c
+                    End If
+                End If
+            Next c
+        End If
+    Next ws
+
+    If Not firstHit Is Nothing Then
+        firstHit.Worksheet.Activate
+        firstHit.Select
+    End If
+End Sub
+
+
 Sub BindShortcuts()
 
     Application.OnKey "%{LEFT}", "AlignLeft" ' Alt+Left
@@ -223,13 +277,14 @@ Sub BindShortcuts()
     Application.OnKey "^+a", "NormalizeView" ' Ctrl+Shift+A
     Application.OnKey "^+q", "ToggleYellowRed" ' Ctrl+Shift+Q
     Application.OnKey "^+i", "TogglePurpleFont" ' Ctrl+Shift+I
-    Application.OnKey "^+o", "ToggleGreenFont" ' Ctrl+Shift+O
+    Application.OnKey "^+o", "ToggleGreen" ' Ctrl+Shift+O
     
     Application.OnKey "^%{RIGHT}", "IncreaseDecimal" ' Ctrl+Alt+Right
     Application.OnKey "^%{LEFT}", "DecreaseDecimal" ' Ctrl+Alt+Left
     
     Application.OnKey "^+f", "SelectVisibleBlanks" ' Ctrl+Shift+F
     Application.OnKey "^+c", "ToggleCenterAcrossSelection" ' Ctrl+Shift+C
+    Application.OnKey "^+d", "FindSameColors" ' Ctrl+Shift+D
 
 End Sub
 
@@ -250,6 +305,7 @@ Sub UnbindShortcuts()
     
     Application.OnKey "^+f"
     Application.OnKey "^+c"
+    Application.OnKey "^+d"
 
 End Sub
 
