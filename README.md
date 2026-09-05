@@ -13,3 +13,5 @@ Sub Workbook_Open()
     BindShortcuts
 End Sub
 ```
+## Warto wiedzieć
+Niektóre bindy nadpisują te istniejące w excelu (moim zdaniem rzadko używane)
