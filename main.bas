@@ -66,13 +66,24 @@ Sub ToggleYellow()
         rng.Font.Bold = True
     End If
 End Sub
-Sub FormatSheetArial()
-    With ActiveSheet
-        .Cells.Font.Name = "Arial"
-        .Cells.Font.Size = 10
-        
-        .Parent.Windows(1).Zoom = 90
-    End With
+Sub NormalizeView()
+    
+    Dim startSheet As Worksheet
+    Set startSheet = ActiveSheet
+    
+    Application.ScreenUpdating = False
+
+    Dim i As Worksheet
+    For Each i In ActiveWorkbook.Worksheets
+        i.Activate
+        ActiveWindow.Zoom = 90
+        i.Range("A1").Select
+        ActiveWindow.ScrollRow = 1
+        ActiveWindow.ScrollColumn = 1 'bez tych 2 linijek nie wróci widokiem do A1
+    Next i
+
+    startSheet.Activate
+    Application.ScreenUpdating = True
 End Sub
 Sub AlignLeft()
     Selection.HorizontalAlignment = xlLeft
@@ -195,7 +206,7 @@ Sub BindShortcuts()
     Application.OnKey "%{RIGHT}", "AlignRight" ' Alt+Right
     Application.OnKey "%{UP}", "AlignCenter" ' Alt+Up
     
-    Application.OnKey "^+a", "FormatSheetArial" ' Ctrl+Shift+A
+    Application.OnKey "^+a", "NormalizeView" ' Ctrl+Shift+A
     Application.OnKey "^+q", "ToggleYellow" ' Ctrl+Shift+Q
     Application.OnKey "^+i", "TogglePurpleFont" ' Ctrl+Shift+I
     Application.OnKey "^+o", "ToggleGreenFont" ' Ctrl+Shift+O
