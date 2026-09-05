@@ -24,8 +24,6 @@ Sub TogglePurpleFont()
         End If
     End With
 End Sub
-
-
 Sub ToggleGreenFont()
     Dim cell As Range
     Dim rng As Range
@@ -50,7 +48,7 @@ Sub ToggleGreenFont()
         End With
     Next cell
 End Sub
-Public Sub ToggleYellow()
+Sub ToggleYellow()
     Dim rng As Range
 
     On Error Resume Next
@@ -68,7 +66,6 @@ Public Sub ToggleYellow()
         rng.Font.Bold = True
     End If
 End Sub
-
 Sub FormatSheetArial()
     With ActiveSheet
         .Cells.Font.Name = "Arial"
@@ -77,15 +74,12 @@ Sub FormatSheetArial()
         .Parent.Windows(1).Zoom = 90
     End With
 End Sub
-
 Sub AlignLeft()
     Selection.HorizontalAlignment = xlLeft
 End Sub
-
 Sub AlignRight()
     Selection.HorizontalAlignment = xlRight
 End Sub
-
 Sub AlignCenter()
     Selection.HorizontalAlignment = xlCenter
 End Sub
@@ -107,7 +101,6 @@ Sub DecreaseDecimal()
         End If
     Next cell
 End Sub
-
 Function GetAdjustedFormat(ByVal fmt As String, ByVal delta As Long) As String
     Dim baseFmt As String
     Dim decimals As Long
@@ -147,8 +140,6 @@ Function GetAdjustedFormat(ByVal fmt As String, ByVal delta As Long) As String
         GetAdjustedFormat = baseFmt
     End If
 End Function
-
-
 Sub SelectVisibleBlanks()
     Dim rng As Range
     Dim blanks As Range
@@ -198,32 +189,42 @@ Sub ToggleCenterAcrossSelection()
     End If
 End Sub
 
-'run below to bind shortcuts
 Sub BindShortcuts()
-    Application.OnKey "%{LEFT}", "AlignLeft" 'alt and aarows
-    Application.OnKey "%{RIGHT}", "AlignRight"
-    Application.OnKey "%{UP}", "AlignCenter"
-    'Application.OnKey "^+a", "FormatSheetArial"   ' Ctrl+Shift+A
-    Application.OnKey "^+q", "ToggleYellow"   ' ctrl+Shift+Q
-    Application.OnKey "^+i", "TogglePurpleFont"   ' Ctrl+Shift+I
-    Application.OnKey "^+o", "ToggleGreenFont"   ' Ctrl+Shift+O
-    Application.OnKey "^%{RIGHT}", "IncreaseDecimal"
-    Application.OnKey "^%{LEFT}", "DecreaseDecimal"
-    Application.OnKey "^+f", "SelectVisibleBlanks"
-    Application.OnKey "^+c", "ToggleCenterAcrossSelection"
+
+    Application.OnKey "%{LEFT}", "AlignLeft" ' Alt+Left
+    Application.OnKey "%{RIGHT}", "AlignRight" ' Alt+Right
+    Application.OnKey "%{UP}", "AlignCenter" ' Alt+Up
+    
+    Application.OnKey "^+a", "FormatSheetArial" ' Ctrl+Shift+A
+    Application.OnKey "^+q", "ToggleYellow" ' Ctrl+Shift+Q
+    Application.OnKey "^+i", "TogglePurpleFont" ' Ctrl+Shift+I
+    Application.OnKey "^+o", "ToggleGreenFont" ' Ctrl+Shift+O
+    
+    Application.OnKey "^%{RIGHT}", "IncreaseDecimal" ' Ctrl+Alt+Right
+    Application.OnKey "^%{LEFT}", "DecreaseDecimal" ' Ctrl+Alt+Left
+    
+    Application.OnKey "^+f", "SelectVisibleBlanks" ' Ctrl+Shift+F
+    Application.OnKey "^+c", "ToggleCenterAcrossSelection" ' Ctrl+Shift+C
 
 End Sub
 
+
 Sub UnbindShortcuts()
+
     Application.OnKey "%{LEFT}"
     Application.OnKey "%{RIGHT}"
     Application.OnKey "%{UP}"
-    Application.OnKey "^q"
+    
     Application.OnKey "^+a"
     Application.OnKey "^+q"
     Application.OnKey "^+i"
+    Application.OnKey "^+o"
+    
     Application.OnKey "^%{RIGHT}"
     Application.OnKey "^%{LEFT}"
-    Application.OnKey "^+o"
+    
+    Application.OnKey "^+f"
+    Application.OnKey "^+c"
+
 End Sub
 
